@@ -3,6 +3,7 @@ package com.example.ch09_push_notification_reciever
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
 
@@ -10,12 +11,23 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.resultTextView)
     }
 
-    private val firebaseTokenTextView: TextView by lazy {
+    private val firebaseToken: TextView by lazy {
         findViewById<TextView>(R.id.firebaseTokenTextView)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        initFirebase()
+    }
+
+    private fun initFirebase() {
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    firebaseToken.text = task.result
+                }
+            }
     }
 }
