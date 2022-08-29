@@ -1,5 +1,6 @@
 package com.example.ch14_second_hand.chatlist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ch14_second_hand.DBKey.Companion.CHILD_CHAT
 import com.example.ch14_second_hand.DBKey.Companion.DB_USERS
 import com.example.ch14_second_hand.R
+import com.example.ch14_second_hand.chatdetail.ChatRoomActivity
 import com.example.ch14_second_hand.databinding.FragmentChatlistBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -33,8 +35,13 @@ class ChatListFragment: Fragment(R.layout.fragment_chatlist) {
         val fragmentChatlistBinding = FragmentChatlistBinding.bind(view)
         binding = fragmentChatlistBinding
 
-        chatListAdapter = ChatListAdapter(onItemClicked = {
+        chatListAdapter = ChatListAdapter(onItemClicked = { chatRoom ->
+            context?.let {
+                val intent = Intent(it, ChatRoomActivity::class.java)
+                intent.putExtra("chatKey", chatRoom.key)
 
+                startActivity(intent)
+            }
         })
 
         chatRoomList.clear()
@@ -61,8 +68,7 @@ class ChatListFragment: Fragment(R.layout.fragment_chatlist) {
                 chatListAdapter.notifyDataSetChanged()
             }
 
-            override fun onCancelled(error: DatabaseError) {
-            }
+            override fun onCancelled(error: DatabaseError) { }
         })
     }
 
